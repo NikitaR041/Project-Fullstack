@@ -5,8 +5,8 @@
 @section('content')
     <section class="cover">
         <div class="left-section">
-            <img src="images/logo.png" alt="Логотип сайта" class="logo">
-            <h1>TaskDino</h1>
+            <img src="image/logo.png" alt="Логотип сайта" class="logo">
+            <h1>Task</h1>
             <h2>
                 Твой задачник дел!<br>
                 Не забудь про важные мероприятия!

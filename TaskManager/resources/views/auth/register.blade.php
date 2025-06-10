@@ -5,7 +5,7 @@
 @section('content')
     <section class="view_register">
         <div class="register-container">
-            <img src="/images/logo.png" alt="Логотип TaskDino" class="register-logo">
+            <img src="/image/logo.png" alt="Логотип TaskDino" class="register-logo">
             <h1 class="register-title">Регистрация</h1>
 
             <form method="POST" action="{{ route('register') }}" class="register-form">
