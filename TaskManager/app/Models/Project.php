@@ -27,6 +27,6 @@ class Project extends Model
     // Проект может содержать много задач (многие ко многим)
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_project');
+        return $this->hasMany(Task::class);
     }
 }

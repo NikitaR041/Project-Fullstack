@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title'); // Название задачи
             $table->text('description')->nullable(); // Описание задачи (опционально)
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Привязка к пользователю
+            $table->foreignId('project_id')->nullable()->constrained()->onDelete('set null'); // Принадлежность проекту (опционально)
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null'); // Категория задачи (опционально)
             $table->timestamp('start_date')->nullable(); // Дата начала задачи
             $table->timestamp('deadline')->nullable(); // Дедлайн задачи

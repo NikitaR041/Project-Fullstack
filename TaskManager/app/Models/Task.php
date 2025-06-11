@@ -10,7 +10,7 @@ class Task extends Model
     use HasFactory;
 
     //Поля
-    protected $fillable = ['title', 'description', 'user_id', 'category_id', 'start_date', 'deadline'];
+    protected $fillable = ['title', 'description', 'user_id', 'category_id', 'project_id', 'start_date', 'deadline'];
 
     // Задача принадлежит одному пользователю
     public function user()
@@ -25,8 +25,8 @@ class Task extends Model
     }
 
     // Одна задача может принадлежать нескольким проектам (многие ко многим)
-    public function projects()
+    public function project()
     {
-        return $this->belongsToMany(Project::class, 'task_project');
+        return $this->belongsTo(Project::class);
     }
 }
