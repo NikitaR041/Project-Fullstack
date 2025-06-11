@@ -2,56 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    //Показывать форму регистрации
     public function showRegisterForm()
     {
-        return view('pages.auth.register');
+        return view('auth.register');
     }
 
+    // Сохраняем нового пользователя в базе
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:4|confirmed', // Пароль и подтверждение
         ]);
 
-        User::create([
+        // Создаем нового пользователя
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password), // Хэшируем пароль
         ]);
 
-        return redirect()->route('home')->with('success', 'Регистрация прошла успешно!');
+        Auth::login($user);
+        return redirect()->route('dashboard')->with('success', 'Регистрация прошла успешно!');
     }
 
+    //Показывать форму входа
     public function showLoginForm()
     {
-        return view('pages.auth.login');
+        return view('auth.login');
     }
 
+    //Вход пользователя - логика
     public function login(Request $request)
     {
+        // Валидация данных формы
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:6',
+            'email'    => 'required|email',
+            'password' => 'required|string',
         ]);
 
+        // Попытка авторизации
         if (Auth::attempt($credentials)) {
-            return redirect()->route('home')->with('success', 'Вы успешно вошли!');
+            $request->session()->regenerate();          // защита от фиксации сессии - меняем ID
+            return redirect()->route('dashboard');      // на рабочий стол
         }
 
-        return back()->withErrors(['email' => 'Неправильные учетные данные']);
+        // Ошибка: возвращаемся назад с сообщением
+        return back()->withErrors([
+            'email' => 'Неверный email или пароль.',
+        ])->onlyInput('email');
     }
 
-    public function logout()
+    /** Выход */
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate(); //Обнуляем сессию - защита от кражи
+        $request->session()->regenerateToken(); //Новый CSRF-токен
         return redirect()->route('home')->with('success', 'Вы вышли из системы!');
     }
 }
