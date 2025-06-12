@@ -1,0 +1,83 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container mt-5">
+    <h2>{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Формируем правильный маршрут и метод --}}
+    <form
+        action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}" method="POST">
+        @csrf
+
+        @if(isset($task))
+            @method('PUT')
+        @endif
+
+        <div class="form-group mb-3">
+            <label for="title">Название задачи</label>
+            <input type="text" name="title" class="form-control" value="{{ old('title', $task->title ?? '') }}" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="description">Описание</label>
+            <textarea name="description" class="form-control">{{ old('description', $task->description ?? '') }}</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="category">Категория</label>
+            <input type="text" name="category" class="form-control"
+                value="{{ old('category', $task->category->name ?? '') }}" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="deadline">Дедлайн</label>
+            <input type="date" name="deadline" class="form-control"
+                   value="{{ old('deadline', isset($task->deadline) ? $task->deadline->format('Y-m-d') : '') }}">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                {{ isset($task) ? 'Сохранить изменения' : 'Создать задачу' }}
+            </button>
+
+            {{-- Показываем кнопку удаления только если задача уже существует
+            @if(isset($task))
+                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            @endif --}}
+
+            {{-- <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Назад</a> --}}
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
+        </div>
+    </form>
+
+    {{-- Показываем кнопку удаления только если задача уже существует --}}
+    @if(isset($task))
+        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    @endif
+{{--
+    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger">Удалить</button>
+    </form>
+ --}}
+</div>
+@endsection
