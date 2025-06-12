@@ -12,6 +12,9 @@ class Task extends Model
     //Поля
     protected $fillable = ['title', 'description', 'user_id', 'category_id', 'project_id', 'start_date', 'deadline'];
 
+    //Дополнительно для форматирование даты
+    protected $casts = [ 'start_date' => 'datetime', 'deadline' => 'datetime', ];
+
     // Задача принадлежит одному пользователю
     public function user()
     {

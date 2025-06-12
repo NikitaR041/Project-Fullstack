@@ -45,21 +45,19 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
+            'category' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'nullable|date',
             'deadline' => 'nullable|date|after_or_equal:start_date'
         ]);
 
-        // // Найти или создать категорию
-        // if ($validated['category']) {
-        //     $category = Category::firstOrCreate(['name' => $validated['category']]);
-        //     $validated['category_id'] = $category->id;
-        // }
-
         // Вобщем то здесь есть ошибка, которую нужно исправить, т.е. пользователь вводит строку, но почему-то не присваивается id, грубо говоря, не создается строка с этим названным категорием.
-        $category = Category::firstOrCreate(['name' => $validated['category']]); //Найти существующую категорию или создать новую
+        $category = Category::firstOrCreate(//Найти существующую категорию или создать новую
+            ['name' => $validated['category'], 'user_id' => Auth::id()],
+            ['name' => $validated['category']] // на случай firstOrCreate
+        );
         $validated['category_id'] = $category->id; //Привязываем найденный или созданный ID категории
+        unset($validated['category']);
 
         $validated['user_id'] = Auth::id();
 
@@ -95,11 +93,17 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
-            'category_id' => 'nullable|exists:categories,id',
+            'category' => 'required|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'sometimes|date',
             'deadline' => 'sometimes|date|after_or_equal:start_date'
         ]);
+
+        // Найти или создать категорию
+        $category = Category::firstOrCreate(['name' => $validated['category']]);
+        $validated['category_id'] = $category->id;
+
+        unset($validated['category']); // Убираем, чтобы не было ошибки
 
         $task->update($validated);
         // return redirect()->route('tasks.index')->with('success', 'Задача обновлена.');
@@ -110,7 +114,15 @@ class TaskController extends Controller
     //Удаление задачи у пользователя
     public function destroy(Task $task)
     {
+        // Проверка на то, что если все карточки-задачи удалены, то удаляется и соотвутствующая категория
+        $category = $task->category; // Сохраняем категорию до удаления
         $task->delete();
+
+        // Проверяем, остались ли другие задачи с этой категорией
+        if ($category && $category->tasks()->count() === 0) {
+            $category->delete();
+        }
+
         // return redirect()->route('tasks.index')->with('success', 'Задача удалена.');
         // return redirect()->route('pages.tasks.form')->with('success', 'Задача удалена.');
         return redirect()->route('dashboard')->with('success', 'Задача удалена.');

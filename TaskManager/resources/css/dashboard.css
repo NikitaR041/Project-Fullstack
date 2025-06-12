@@ -22,12 +22,13 @@
 }
 
 .card {
-    min-width: 200px; /* Фиксированная ширина карточки */
-    height: 150px;
+    min-width: 200px;
+    height: 200px;
     background-color: #93df89;
     border: 1px solid #338d23;
     padding: 20px;
     text-align: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
 

@@ -9,7 +9,7 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     // Категория может содержать множество задач
     public function tasks()
@@ -21,5 +21,11 @@ class Category extends Model
     public function projects()
     {
         return $this->hasMany(Project::class);
+    }
+
+    // Новинка
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
