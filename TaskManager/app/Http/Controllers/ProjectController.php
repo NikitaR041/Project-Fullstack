@@ -10,8 +10,12 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        return Project::with(['category', 'tasks'])
-            ->where('user_id', Auth::id())->latest()->get();
+        $projects = Project::with(['category', 'tasks'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return response()->json($projects);
     }
 
     public function store(Request $request)
@@ -30,11 +34,14 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $this->authorize('view', $project);
         return $project->load(['category', 'tasks']);
     }
 
     public function update(Request $request, Project $project)
     {
+        $this->authorize('update', $project);
+
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
@@ -47,7 +54,11 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        $this->authorize('delete', $project);
+
+        $project->tasks()->delete();
         $project->delete();
+
         return response()->noContent();
     }
 }
