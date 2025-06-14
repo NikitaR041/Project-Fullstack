@@ -10,22 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-
     // Просмотр всех задач
     public function index()
     {
-        // $tasks = Auth::user()->tasks()
         $tasks = Task::where('user_id', Auth::id())
                     ->with(['category', 'project'])
                     ->latest()
                     ->paginate(10);
 
-        // return view('pages.tasks.index', compact('tasks'));
-        // return view('pages.tasks.form', compact('tasks'));
         return view('pages.dashboard', compact('tasks'));
     }
 
@@ -35,7 +27,6 @@ class TaskController extends Controller
         $projects = Project::where('user_id', Auth::id())->get();
         $categories = Category::all();
 
-        // return view('pages.tasks.create', compact('projects', 'categories'));
         return view('pages.tasks.form', compact('projects', 'categories'));
     }
 
@@ -48,7 +39,7 @@ class TaskController extends Controller
             'category' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'nullable|date',
-            'deadline' => 'nullable|date|after_or_equal:start_date'
+            'deadline' => 'required|date|after_or_equal:start_date'
         ]);
 
         // Вобщем то здесь есть ошибка, которую нужно исправить, т.е. пользователь вводит строку, но почему-то не присваивается id, грубо говоря, не создается строка с этим названным категорием.
@@ -63,8 +54,6 @@ class TaskController extends Controller
 
         Task::create($validated);
 
-        // return redirect()->route('tasks.index')->with('success', 'Задача создана.');
-        // return redirect()->route('pages.tasks.form')->with('success', 'Задача создана.');
         return redirect()->route('dashboard')->with('success', 'Задача создана.');
     }
 
@@ -100,7 +89,9 @@ class TaskController extends Controller
         ]);
 
         // Найти или создать категорию
-        $category = Category::firstOrCreate(['name' => $validated['category']]);
+        $category = Category::firstOrCreate([
+            'name' => $validated['category'], 'user_id' => Auth::id()
+        ]);
         $validated['category_id'] = $category->id;
 
         unset($validated['category']); // Убираем, чтобы не было ошибки

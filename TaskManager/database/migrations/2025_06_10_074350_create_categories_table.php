@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); // Уникальный идентификатор категории
-            $table->string('name')->unique();
+            $table->string('name');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); //Связь с users
             $table->timestamps(); // Дата создания и обновления записи
 
