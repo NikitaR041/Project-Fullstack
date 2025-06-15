@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id(); // Уникальный идентификатор проекта
-            $table->string('name'); // Название проекта
+            $table->string('title'); // Название проекта
             $table->text('description')->nullable(); // Описание проекта (опционально)
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Привязка к пользователю
-            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null'); // Категория проекта (опционально)
+            // $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null'); // Категория проекта (опционально)
             $table->timestamps(); // Дата создания и обновления записи
         });
     }

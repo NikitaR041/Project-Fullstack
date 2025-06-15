@@ -6,7 +6,7 @@
         <span>👤 Зашел: {{ Auth::user()->name }}</span>
     </div>
     {{-- <a href="{{ route('profile.edit') }}" class="btn btn-primary">Редактировать аккаунт</a> --}}
-    <a class="btn btn-secondary">Создать проект</a>
+    <a href="{{ route('projects.create') }}" class="btn btn-secondary">Создать проект</a>
     <a href="{{ route('tasks.create') }}" class="btn btn-secondary">Создать задачу</a>
     <a class="btn btn-secondary">Расписание</a>
     <a href="{{ route('logout') }}" class="btn btn-secondary">Выход</a>
@@ -17,15 +17,16 @@
     <div class="project-section scroll-container">
         <h2>Проекты</h2>
         <div class="cards">
-            {{-- Условное создание карточек --}}
-            <div class="card">Задача 1</div>
-            <div class="card">Задача 2</div>
-            <div class="card">Задача 3</div>
-            <div class="card">Задача 4</div>
-            <div class="card">Задача 1</div>
-            <div class="card">Задача 2</div>
-            <div class="card">Задача 3</div>
-            <div class="card">Задача 4</div>
+            @forelse($projects as $project)
+                <a href="{{ route('projects.show', $project->id) }}" class="card">
+                    <strong>{{ $project->title }}</strong><br>
+                    <small>{{ $project->description }}</small><br>
+                    {{-- <small>Категория: {{ $project->category->name ?? 'Без категории' }}</small><br> --}}
+                    {{-- <small>Дедлайн: {{ $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('d.m.Y') : 'Не указан' }}</small><br> --}}
+                </a>
+            @empty
+                <div>У вас пока нет проектов</div>
+            @endforelse
         </div>
     </div>
 

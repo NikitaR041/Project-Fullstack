@@ -27,7 +27,7 @@ class Task extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // Одна задача может принадлежать нескольким проектам (многие ко многим)
+    // Одна задача может принадлежать нескольким проектам (один ко многим)
     public function project()
     {
         return $this->belongsTo(Project::class);

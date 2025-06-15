@@ -16,18 +16,28 @@ class TaskController extends Controller
         $tasks = Task::where('user_id', Auth::id())
                     ->with(['category', 'project'])
                     ->latest()
-                    ->paginate(10);
+                    ->get();
 
         return view('pages.dashboard', compact('tasks'));
     }
 
     // Создание задачи - открывается форма
-    public function create()
+    //Универсальный метод - 1)Открывается вне объекта-проекта; 2)Открывается в объекта-проекте
+    public function create(Request $request)
     {
+        // Получаем все проекты текущего пользователя (для выпадающего списка)
         $projects = Project::where('user_id', Auth::id())->get();
+        // Получаем все категории
         $categories = Category::all();
 
-        return view('pages.tasks.form', compact('projects', 'categories'));
+        // Проверяем, пришёл ли project_id (например, из страницы проекта)
+        $projectId = $request->input('project_id');
+        $selectedProject = null;
+        if ($projectId) {
+            $selectedProject = Project::find($projectId);
+        }
+
+        return view('pages.tasks.formTask', compact('projects', 'categories', 'selectedProject'));
     }
 
     //Сохранение задачи - получает данные и сохраняет в бд
@@ -42,7 +52,6 @@ class TaskController extends Controller
             'deadline' => 'required|date|after_or_equal:start_date'
         ]);
 
-        // Вобщем то здесь есть ошибка, которую нужно исправить, т.е. пользователь вводит строку, но почему-то не присваивается id, грубо говоря, не создается строка с этим названным категорием.
         $category = Category::firstOrCreate(//Найти существующую категорию или создать новую
             ['name' => $validated['category'], 'user_id' => Auth::id()],
             ['name' => $validated['category']] // на случай firstOrCreate
@@ -54,6 +63,12 @@ class TaskController extends Controller
 
         Task::create($validated);
 
+        // Если задача относится к проекту — редирект на редактирование проекта
+        if ($validated['project_id'] ?? false) {
+            return redirect()->route('projects.edit', $validated['project_id'])
+                             ->with('success', 'Задача добавлена к проекту.');
+        }
+        // Иначе — редирект на dashboard
         return redirect()->route('dashboard')->with('success', 'Задача создана.');
     }
 
@@ -62,8 +77,7 @@ class TaskController extends Controller
     {
         $task->load(['user', 'category', 'project']);
         $categories = Category::all();
-        // return view('pages.tasks.show', compact('task'));
-        return view('pages.tasks.form', compact('task', 'categories'));
+        return view('pages.tasks.formTask', compact('task', 'categories'));
     }
 
     // Редактирование задачи
@@ -72,8 +86,7 @@ class TaskController extends Controller
         $projects = Project::where('user_id', Auth::id())->get();
         $categories = Category::all();
 
-        // return view('pages.tasks.edit', compact('task', 'projects', 'categories'));
-        return view('pages.tasks.form', compact('task', 'projects', 'categories'));
+        return view('pages.tasks.formTask', compact('task', 'projects', 'categories'));
     }
 
     //Сохранение изменений - связан с методом edit
@@ -97,8 +110,6 @@ class TaskController extends Controller
         unset($validated['category']); // Убираем, чтобы не было ошибки
 
         $task->update($validated);
-        // return redirect()->route('tasks.index')->with('success', 'Задача обновлена.');
-        // return redirect()->route('pages.tasks.form')->with('success', 'Задача обновлена.');
         return redirect()->route('dashboard')->with('success', 'Задача обновлена!');
     }
 
@@ -114,8 +125,6 @@ class TaskController extends Controller
             $category->delete();
         }
 
-        // return redirect()->route('tasks.index')->with('success', 'Задача удалена.');
-        // return redirect()->route('pages.tasks.form')->with('success', 'Задача удалена.');
         return redirect()->route('dashboard')->with('success', 'Задача удалена.');
     }
 }

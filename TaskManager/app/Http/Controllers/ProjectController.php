@@ -2,52 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
+    public function create()
+    {
+        return view('pages.projects.formProject');
+    }
+
+    //Просмотр всех проектов
     public function index()
     {
-        return Project::with(['category', 'tasks'])
-            ->where('user_id', Auth::id())->latest()->get();
+        $projects = Project::where('user_id', Auth::id())
+                ->with('tasks')
+                ->latest()
+                ->get();
+
+        // $tasks = Task::where('user_id', Auth::id())
+        //             ->whereNotNull('project_id')
+        //             ->with('project') // чтобы сразу подтянуть проект
+        //             ->get();
+
+        return view('pages.dashboard', compact('projects'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'nullable|exists:categories,id'
         ]);
 
         $validated['user_id'] = Auth::id();
         $project = Project::create($validated);
 
-        return response()->json($project->load(['category', 'tasks']), 201);
+        // return redirect()->route('dashboard')->with('success', 'Проект успешно создан!');
+        return redirect()->route('projects.edit', $project->id)
+                     ->with('success', 'Проект успешно создан!');
     }
 
+    // Просмотр одного проекта - у каждого проекта есть свои связи с "пользователем" и "задачей" - поэтому массив
     public function show(Project $project)
     {
-        return $project->load(['category', 'tasks']);
+        $project->load(['user', 'tasks']);
+        return view('pages.projects.formProject', compact('project'));
+
     }
 
+    //Редактирование проекта
+    public function edit(Project $project)
+    {
+        $project->load('tasks');
+        return view('pages.projects.formProject', compact('project'));
+    }
+
+    //Сохранение изменений - связан с методом edit
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
-            'category_id' => 'nullable|exists:categories,id'
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
         $project->update($validated);
-        return response()->json($project->load(['category', 'tasks']));
+        // return response()->json($project->load(['category', 'tasks']));
+        return redirect()->route('projects.edit', $project->id)->with('success', 'Проект успешно обновлён!');
     }
 
+    //Удаление проекта
     public function destroy(Project $project)
     {
         $project->delete();
-        return response()->noContent();
+        return redirect()->route('dashboard')->with('success', 'Задача удалена.');
     }
 }
