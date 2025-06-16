@@ -6,7 +6,7 @@
         <span>👤 Зашел: {{ Auth::user()->name }}</span>
     </div>
     {{-- <a href="{{ route('profile.edit') }}" class="btn btn-primary">Редактировать аккаунт</a> --}}
-    <a class="btn btn-secondary">Создать проект</a>
+    <a href="{{ route('projects.create') }}" class="btn btn-secondary">Создать проект</a>
     <a href="{{ route('tasks.create') }}" class="btn btn-secondary">Создать задачу</a>
     <a class="btn btn-secondary">Расписание</a>
     <a href="{{ route('logout') }}" class="btn btn-secondary">Выход</a>

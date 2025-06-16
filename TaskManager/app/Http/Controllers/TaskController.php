@@ -87,7 +87,7 @@ class TaskController extends Controller
         $task->load(['user', 'category', 'project']);
         $categories = Category::all();
         // return view('pages.tasks.show', compact('task'));
-        return view('pages.tasks.form', compact('task', 'categories'));
+        return view('pages.tasks.formTask', compact('task', 'categories'));
     }
 
     // Редактирование задачи
