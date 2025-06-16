@@ -12,7 +12,10 @@ class Project extends Model
     //Поля
     // protected $fillable = ['title', 'description', 'user_id', 'category_id'];
     // Не нужно нам поле category_id
-    protected $fillable = ['title', 'description', 'user_id'];
+    protected $fillable = ['title', 'description', 'user_id', 'category_id', 'start_date', 'deadline'];
+
+    //Дополнительно для форматирование даты
+    protected $casts = [ 'start_date' => 'datetime', 'deadline' => 'datetime', ];
 
     // Проект принадлежит одному пользователю
     public function user()
@@ -21,10 +24,10 @@ class Project extends Model
     }
 
     // Проект принадлежит одной категории (если назначена)
-    // public function category()
-    // {
-    //     return $this->belongsTo(Category::class);
-    // }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     // Проект может содержать много задач (многие ко многим)
     public function tasks()

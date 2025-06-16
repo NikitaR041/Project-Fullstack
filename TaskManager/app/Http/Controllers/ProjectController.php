@@ -41,7 +41,6 @@ class ProjectController extends Controller
         $validated['user_id'] = Auth::id();
         $project = Project::create($validated);
 
-        // return redirect()->route('dashboard')->with('success', 'Проект успешно создан!');
         return redirect()->route('projects.edit', $project->id)
                      ->with('success', 'Проект успешно создан!');
     }
