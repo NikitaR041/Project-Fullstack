@@ -31,13 +31,13 @@ class TaskController extends Controller
         $categories = Category::all();
 
         // Проверяем, пришёл ли project_id (например, из страницы проекта)
-        $projectId = $request->input('project_id');
-        $selectedProject = null;
+        $projectId = $request->query('project_id');
+        $selectedProjectId = null;
         if ($projectId) {
-            $selectedProject = Project::find($projectId);
+            $selectedProjectId = $projectId;
         }
 
-        return view('pages.tasks.formTask', compact('projects', 'categories', 'selectedProject'));
+        return view('pages.tasks.formTask', compact('projects', 'categories', 'selectedProjectId'));
     }
 
     //Сохранение задачи - получает данные и сохраняет в бд
@@ -52,19 +52,14 @@ class TaskController extends Controller
             'deadline' => 'required|date|after_or_equal:start_date'
         ]);
 
-        if (isset($validated['project_id']) && $validated['project_id']) {
-            $project = Project::find($validated['project_id']);
-            if ($project && $project->user_id !== Auth::id()) {
-                abort(403, 'Вы не можете привязывать задачи к чужим проектам');
-            }
-        }
-
         $category = Category::firstOrCreate(//Найти существующую категорию или создать новую
             ['name' => $validated['category'], 'user_id' => Auth::id()],
             ['name' => $validated['category']] // на случай firstOrCreate
         );
+
         $validated['category_id'] = $category->id; //Привязываем найденный или созданный ID категории
         unset($validated['category']);
+        $validated['project_id'] = $request->input('project_id') ?? null;
 
         $validated['user_id'] = Auth::id();
 
@@ -99,7 +94,7 @@ class TaskController extends Controller
         $categories = Category::all();
 
         // return view('pages.tasks.edit', compact('task', 'projects', 'categories'));
-        return view('pages.tasks.form', compact('task', 'projects', 'categories'));
+        return view('pages.tasks.formTask', compact('task', 'projects', 'categories'));
     }
 
     //Сохранение изменений - связан с методом edit

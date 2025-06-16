@@ -16,12 +16,15 @@
 
     {{-- Формируем правильный маршрут и метод --}}
     <form
-        action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store') }}" method="POST">
+        action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store', $selectedProject->id ?? null) }}" method="POST">
         @csrf
 
         @if(isset($task))
             @method('PUT')
         @endif
+
+        <input type="hidden" name="project_id" value="{{ request('project_id') ?? $selectedProjectId ?? null }}">
+
 
         <div class="form-group mb-3">
             <label for="title">Название задачи</label>
