@@ -52,6 +52,13 @@ class TaskController extends Controller
             'deadline' => 'required|date|after_or_equal:start_date'
         ]);
 
+        if (isset($validated['project_id']) && $validated['project_id']) {
+            $project = Project::find($validated['project_id']);
+            if ($project && $project->user_id !== Auth::id()) {
+                abort(403, 'Вы не можете привязывать задачи к чужим проектам');
+            }
+        }
+
         $category = Category::firstOrCreate(//Найти существующую категорию или создать новую
             ['name' => $validated['category'], 'user_id' => Auth::id()],
             ['name' => $validated['category']] // на случай firstOrCreate
@@ -75,23 +82,31 @@ class TaskController extends Controller
     // Просмотр одной задачи - у каждой задачи есть свои связи с "пользователем", "категорией" и "проектом" - поэтому массив
     public function show(Task $task)
     {
+        $this->authorize('view', $task);
+
         $task->load(['user', 'category', 'project']);
         $categories = Category::all();
-        return view('pages.tasks.formTask', compact('task', 'categories'));
+        // return view('pages.tasks.show', compact('task'));
+        return view('pages.tasks.form', compact('task', 'categories'));
     }
 
     // Редактирование задачи
     public function edit(Task $task)
     {
+        $this->authorize('update', $task);
+
         $projects = Project::where('user_id', Auth::id())->get();
         $categories = Category::all();
 
-        return view('pages.tasks.formTask', compact('task', 'projects', 'categories'));
+        // return view('pages.tasks.edit', compact('task', 'projects', 'categories'));
+        return view('pages.tasks.form', compact('task', 'projects', 'categories'));
     }
 
     //Сохранение изменений - связан с методом edit
     public function update(Request $request, Task $task)
     {
+        $this->authorize('update', $task);
+
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
@@ -100,6 +115,13 @@ class TaskController extends Controller
             'start_date' => 'sometimes|date',
             'deadline' => 'sometimes|date|after_or_equal:start_date'
         ]);
+
+        if (isset($validated['project_id']) && $validated['project_id']) {
+            $project = Project::find($validated['project_id']);
+            if ($project && $project->user_id !== Auth::id()) {
+                abort(403, 'Вы не можете привязывать задачи к чужим проектам');
+            }
+        }
 
         // Найти или создать категорию
         $category = Category::firstOrCreate([
@@ -116,12 +138,13 @@ class TaskController extends Controller
     //Удаление задачи у пользователя
     public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
         // Проверка на то, что если все карточки-задачи удалены, то удаляется и соотвутствующая категория
         $category = $task->category; // Сохраняем категорию до удаления
         $task->delete();
 
         // Проверяем, остались ли другие задачи с этой категорией
-        if ($category && $category->tasks()->count() === 0) {
+        if ($category && $category->user_id === Auth::id() && $category->tasks()->count() === 0) {
             $category->delete();
         }
 

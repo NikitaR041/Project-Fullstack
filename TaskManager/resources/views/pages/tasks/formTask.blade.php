@@ -45,39 +45,24 @@
                    value="{{ old('deadline', isset($task->deadline) ? $task->deadline->format('Y-m-d') : '') }}">
         </div>
 
-        <div class="d-flex gap-2">
+        <div class="d-flex mb-3">
             <button type="submit" class="btn btn-primary">
                 {{ isset($task) ? 'Сохранить изменения' : 'Создать задачу' }}
             </button>
-
-            {{-- Показываем кнопку удаления только если задача уже существует
-            @if(isset($task))
-                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Удалить</button>
-                </form>
-            @endif --}}
-
-            {{-- <a href="{{ route('tasks.index') }}" class="btn btn-secondary">Назад</a> --}}
-            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
         </div>
     </form>
 
-    {{-- Показываем кнопку удаления только если задача уже существует --}}
+            {{-- Показываем кнопку удаления только если задача уже существует --}}
     @if(isset($task))
-        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="mb-3" onsubmit="return confirm('Удалить задачу?')">
             @csrf
             @method('DELETE')
             <button type="submit" class="btn btn-danger">Удалить</button>
         </form>
     @endif
-{{--
-    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger">Удалить</button>
+
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
+        </div>
     </form>
- --}}
 </div>
 @endsection
