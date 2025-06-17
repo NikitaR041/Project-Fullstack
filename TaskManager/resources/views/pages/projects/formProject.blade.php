@@ -25,7 +25,24 @@
 
         <div style="form-group mb-3">
             <label for="title">Название проекта</label>
-            <input type="text" name="title" class="form-control" value="{{ old('title', $project->title ?? '') }}" required>
+            <input type="text" name="title" class="form-control" value="{{ old('title', $project->title ?? '') }}" required style="margin-bottom: 30px">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="category">Категория</label>
+            <input type="text" name="category" class="form-control"
+                value="{{ old('category', $project->category->name ?? '') }}" required>
+        </div>
+
+        <div style="form-group mb-3">
+            <label for="title">Описание</label>
+            <input type="text" name="description" class="form-control" value="{{ old('description', $project->description ?? '') }}" required style="margin-bottom: 30px">
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="deadline">Дедлайн</label>
+            <input type="date" name="deadline" class="form-control"
+                   value="{{ old('deadline', isset($project->deadline) ? $project->deadline->format('Y-m-d') : '') }}">
         </div>
 
         <div style="d-flex gap-2">

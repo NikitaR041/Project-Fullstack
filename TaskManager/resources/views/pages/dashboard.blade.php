@@ -30,7 +30,7 @@
             @forelse($projects as $project)
                 <a href="{{ route('projects.show', $project->id) }}" class="card">
                     <strong>{{ $project->title }}</strong><br>
-                    <small>{{ $project->description }}</small><br>
+                    <small>{{ Str::limit($project->description, 50) }}</small><br>
                     @if($project->deadline)
                         <small class="deadline">📅 Дедлайн: {{ \Carbon\Carbon::parse($project->deadline)->format('d.m.Y') }}</small>
                     @endif
