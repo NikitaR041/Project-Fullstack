@@ -38,10 +38,11 @@
                 <div class="dropdown">
                     <img src="{{ asset('image/category.png') }}" class="icon" onclick="toggleDropdown('project-dropdown')" alt="Фильтр по категориям">
                     <div id="project-dropdown" class="dropdown-menu">
-                        @if(isset($taskCategories) && count($taskCategories) > 0)
-                            <a href="{{ route('dashboard', ['task_category' => 'all']) }}">Все категории</a>
-                            @foreach($taskCategories as $category)
-                                <a href="{{ route('dashboard', ['task_category' => $category->id]) }}">{{ $category->name }}</a>
+                        <!-- В блоке проектов -->
+                        @if(isset($projectCategories) && count($projectCategories) > 0)
+                            <a href="{{ route('dashboard', ['project_category' => 'all']) }}">Все категории</a>
+                            @foreach($projectCategories as $category)
+                                <a href="{{ route('dashboard', ['project_category' => $category->id]) }}">{{ $category->name }}</a>
                             @endforeach
                         @else
                             <span class="dropdown-empty">Категории отсутствуют</span>
