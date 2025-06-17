@@ -8,7 +8,7 @@ header {
 /* Основа main для .cover */
 .cover {
     display: flex;
-    min-height: 20dvh;
+    min-height: 100dvh;
 }
 
 .left-section {
