@@ -14,33 +14,58 @@
 
 <div class="dashboardmain">
     <div class="project-section scroll-container">
-        <h2>Проекты</h2>
+        <div class="section-header">
+            <h2>Проекты</h2>
+            <x-sort-buttons
+                sortParam="project_sort"
+                currentSort="{{ $projectSort ?? 'latest' }}"
+                :options="[
+                    'latest' => 'Новые',
+                    'title' => 'По алфавиту',
+                    'deadline' => 'По дедлайну'
+                ]"
+            />
+        </div>
         <div class="cards">
             @forelse($projects as $project)
                 <a href="{{ route('projects.show', $project->id) }}" class="card">
                     <strong>{{ $project->title }}</strong><br>
-                    <small>{{ $project->description }}</small><br>
-                    {{-- <small>Категория: {{ $project->category->name ?? 'Без категории' }}</small><br> --}}
-                    {{-- <small>Дедлайн: {{ $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('d.m.Y') : 'Не указан' }}</small><br> --}}
+                    <small>{{ Str::limit($project->description, 50) }}</small><br>
+                    @if($project->deadline)
+                        <small class="deadline">📅 Дедлайн: {{ \Carbon\Carbon::parse($project->deadline)->format('d.m.Y') }}</small>
+                    @endif
                 </a>
             @empty
-                <div>У вас пока нет проектов</div>
+                <div class="no-items">У вас пока нет проектов</div>
             @endforelse
         </div>
     </div>
 
     <div class="tasks-section scroll-container">
-        <h2>Задачи</h2>
+        <div class="section-header">
+            <h2>Задачи</h2>
+            <x-sort-buttons
+                sortParam="task_sort"
+                currentSort="{{ $taskSort ?? 'latest' }}"
+                :options="[
+                    'latest' => 'Новые',
+                    'title' => 'По алфавиту',
+                    'deadline' => 'По дедлайну'
+                ]"
+            />
+        </div>
         <div class="cards">
             @forelse($tasks as $task)
                 <a href="{{ route('tasks.show', $task->id) }}" class="card">
                     <strong>{{ $task->title }}</strong><br>
-                    <small>{{ Str::limit($task->description, 50) }}</small>
+                    <small>{{ Str::limit($task->description, 50) }}</small><br>
                     <small>Категория: {{ $task->category->name ?? 'Без категории' }}</small>
-                    <small>Дедлайн: {{ $task->deadline ? \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') : 'Не указан' }}</small>
+                    @if($task->deadline)
+                        <small class="deadline">📅 Дедлайн: {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
+                    @endif
                 </a>
             @empty
-                <div>У вас пока нет задач</div>
+                <div class="no-items">У вас пока нет задач</div>
             @endforelse
         </div>
     </div>
