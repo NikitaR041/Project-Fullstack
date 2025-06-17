@@ -31,6 +31,7 @@
                 <a href="{{ route('projects.show', $project->id) }}" class="card">
                     <strong>{{ $project->title }}</strong><br>
                     <small>{{ Str::limit($project->description, 50) }}</small><br>
+                    <small>Категория: {{ $project->category->name ?? 'Без категории' }}</small>
                     @if($project->deadline)
                         <small class="deadline">📅 Дедлайн: {{ \Carbon\Carbon::parse($project->deadline)->format('d.m.Y') }}</small>
                     @endif
