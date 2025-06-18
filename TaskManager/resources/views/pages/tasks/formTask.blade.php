@@ -22,7 +22,7 @@
             @method('PUT')
         @endif
 
-        <input type="hidden" name="project_id" value="{{ request('project_id') ?? $selectedProjectId ?? null }}">
+        <input type="hidden" name="project_id" value="{{ $task->project_id ?? (request('project_id') ?? $selectedProjectId ?? null) }}">
 
         <div class="form-group mb-3">
             <label for="title">Название задачи</label>
