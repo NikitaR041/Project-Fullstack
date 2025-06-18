@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id(); // Уникальный идентификатор задачи
             $table->string('title'); // Название задачи
             $table->text('description')->nullable(); // Описание задачи (опционально)
+            $table->string('image')->nullable(); //Картинка
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Привязка к пользователю
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('cascade'); // Принадлежность проекту - constrained ограничитель
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null'); // Категория задачи (опционально)

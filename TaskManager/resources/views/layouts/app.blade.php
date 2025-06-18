@@ -10,6 +10,7 @@
     @vite(['resources\css\app.css'])
     @vite(['resources\css\register.css'])
     @vite(['resources\css\dashboard.css'])
+    @vite(['resources\css\form.css'])
 
 </head>
 <body>

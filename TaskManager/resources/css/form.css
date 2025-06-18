@@ -1,0 +1,171 @@
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.task-fields {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.task-texts, .task-images {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f5f5f5;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Базовый стиль для всех task-кнопок */
+.task-btn-base {
+    display: inline-flex;               /* inline, чтобы не растягивалась на всю ширину */
+    align-items: center;               /* ← выравнивание по вертикали */
+    justify-content: center;           /* ← выравнивание по горизонтали (текст + иконка) */
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s, transform 0.2s;
+    cursor: pointer;
+}
+
+/* Стилизация картинки внутри */
+.task-btn-base img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+/* Вариант: обычная зелёная кнопка */
+.task-btn--default {
+    background-color: #dfffdc;
+    border: 1px solid #83cc78;
+}
+
+.task-btn--default:hover {
+    background-color: #a4f0a1;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Вариант: кнопка удаления */
+.task-btn--delete {
+    background-color: #efacac;
+    border: 1px solid #e81414;
+}
+
+.task-btn--delete:hover {
+    background-color: #e81414;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Связано с картинками */
+.image-preview {
+    width: 100%;
+    max-height: 200px;
+    margin-top: 10px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 10px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+.image-label {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #338d23;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.image-label:hover {
+    background-color: #2a7321;
+}
+
+#image {
+    display: none;
+}
+
+/* .task-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.task-button-group form {
+    display: inline-block;
+} */
+
+
+/* Это относиться для множество фото */
+/* .image-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #e0f0ff;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #68aee0;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.image-upload-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.image-upload-btn:hover {
+    background-color: #b8e1ff;
+    transform: scale(1.03);
+}
+
+.image-preview-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.image-preview-card {
+    position: relative;
+    background-color: #ffffff;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview-card img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 6px;
+    object-fit: contain;
+} */

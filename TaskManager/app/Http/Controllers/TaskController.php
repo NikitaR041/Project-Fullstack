@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -51,6 +52,7 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'nullable|date',
@@ -65,6 +67,12 @@ class TaskController extends Controller
         $validated['category_id'] = $category->id; //Привязываем найденный или созданный ID категории
         unset($validated['category']);
         $validated['project_id'] = $request->input('project_id') ?? null;
+
+        if($request->hasFile('image'))
+        {
+            $validated['image'] = $request->file('image')
+                ->store('image', 'public');
+        }
 
         $validated['user_id'] = Auth::id();
 
@@ -110,6 +118,7 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'category' => 'required|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'sometimes|date',
@@ -121,6 +130,15 @@ class TaskController extends Controller
             if ($project && $project->user_id !== Auth::id()) {
                 abort(403, 'Вы не можете привязывать задачи к чужим проектам');
             }
+        }
+
+        if ($request->hasFile('image')) {
+            if ($task->image && Storage::disk('public')->exists($task->image)) {
+                Storage::disk('public')->delete($task->image);
+            }
+
+            $validated['image'] = $request->file('image')
+                ->store('image', 'public');
         }
 
         // Найти или создать категорию
