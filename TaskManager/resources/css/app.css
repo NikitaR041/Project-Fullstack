@@ -134,3 +134,44 @@ header {
     background-color: #1b5e20;
     border-color: #1b5e20;
 }
+
+.completed {
+    opacity: 0.7;
+    border-left: 4px solid #28a745;
+    background-color: #f8f9fa;
+}
+
+.completed h5 {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.card {
+    position: relative;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.progress {
+    height: 20px;
+    margin-bottom: 1rem;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    background-color: #234037;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    transition: width 0.6s ease;
+}
+
+

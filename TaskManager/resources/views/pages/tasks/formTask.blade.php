@@ -55,8 +55,18 @@
         </div>
     </form>
 
+        @if(isset($task))
+
+        @endif
+
     {{-- Форма удаления задачи (отдельно, только если задача уже существует) --}}
     @if(isset($task))
+        <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="btn {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
+            </button>
+        </form>
         <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Удалить задачу?')">
             @csrf
             @method('DELETE')

@@ -72,17 +72,39 @@
         <div class="col-md-6">
             <h3>Задачи проекта</h3>
             @if(isset($project) && $project->tasks->count())
+            <h7>Прогресс выполнения:</h7>
+            <div class="progress mb-3">
+                <div class="progress-bar" role="progressbar"
+                    style="width: {{ $project->progress }}%"
+                    aria-valenow="{{ $project->progress }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                    {{ $project->progress }}%
+                </div>
+            </div>
             <div class="cards">
                 @foreach($project->tasks as $task)
-                    <div class="card">
-                        <a href="{{ route('tasks.edit', $task->id) }}" style="text-decoration: none; color: inherit;">
-                            <h5>{{ $task->title }}</h5>
-                            <p>{{ Str::limit($task->description, 80) }}</p>
-                            @if($task->deadline)
-                                <small>⏳ до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
-                            @endif
-                        </a>
+                    <div class="card {{ $task->is_completed ? 'completed' : '' }}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <a href="{{ route('tasks.edit', $task->id) }}" style="text-decoration: none; color: inherit;">
+                                    <h5>{{ $task->title }}</h5>
+                                    <p>{{ Str::limit($task->description, 80) }}</p>
+                                    @if($task->deadline)
+                                        <small>⏳ до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
+                                    @endif
+                                </a>
+                                <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST" class="ms-2">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                                        {{ $task->is_completed ? '✓' : '◻' }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                </div>
                 @endforeach
             </div>
 

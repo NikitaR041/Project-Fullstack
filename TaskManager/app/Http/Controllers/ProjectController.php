@@ -29,7 +29,11 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('pages.projects.formProject');
+        $categories = Category::where('user_id', Auth::id())->get();
+        return view('pages.projects.formProject', [
+            'project' => null,
+            'categories' => $categories
+        ]);
     }
 
     public function store(Request $request)

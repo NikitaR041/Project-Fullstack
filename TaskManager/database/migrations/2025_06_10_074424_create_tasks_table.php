@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null'); // Категория задачи (опционально)
             $table->timestamp('start_date')->nullable(); // Дата начала задачи
             $table->timestamp('deadline')->nullable(); // Дедлайн задачи
+            $table->boolean('is_completed')->default(false);
             $table->timestamps(); // Дата создания и обновления записи
         });
     }

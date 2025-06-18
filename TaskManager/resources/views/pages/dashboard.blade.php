@@ -112,13 +112,19 @@
         </div>
         <div class="cards">
             @forelse($tasks as $task)
-                <a href="{{ route('tasks.show', $task->id) }}" class="card">
+                <a href="{{ route('tasks.show', $task->id) }}" class="card {{ $task->is_completed ? 'completed' : '' }}">
                     <strong>{{ $task->title }}</strong><br>
                     <small>{{ Str::limit($task->description, 50) }}</small><br>
-                    <small>Категория: {{ $task->category->name ?? 'Без категории' }}</small><br>
+                    <small>Категория: {{ $task->category->name ?? 'Без категории' }}</small>
                     @if($task->deadline)
                         <small class="deadline">📅 {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
                     @endif
+                    <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST" class="ms-2">
+                        @csrf
+                        <button type="submit" class="btn btn-sm {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                            {{ $task->is_completed ? '✓' : '◻' }}
+                        </button>
+                    </form>
                 </a>
             @empty
                 <div class="no-items">Нет задач</div>

@@ -37,7 +37,12 @@ class TaskController extends Controller
             $selectedProjectId = $projectId;
         }
 
-        return view('pages.tasks.formTask', compact('projects', 'categories', 'selectedProjectId'));
+        return view('pages.tasks.formTask', [
+            'task' => null,
+            'projects' => $projects,
+            'categories' => $categories,
+            'selectedProjectId' => $selectedProjectId
+        ]);
     }
 
     //Сохранение задачи - получает данные и сохраняет в бд
@@ -144,5 +149,13 @@ class TaskController extends Controller
         }
 
         return redirect()->route('dashboard')->with('success', 'Задача удалена.');
+    }
+
+    public function toggleComplete(Task $task) {
+        $this->authorize('update', $task);
+
+        $task->update(['is_completed' => !$task->is_completed]);
+
+        return back()->with('success', 'Статус задачи обновлен.');
     }
 }

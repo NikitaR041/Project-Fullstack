@@ -17,6 +17,17 @@ class Project extends Model
     //Дополнительно для форматирование даты
     protected $casts = [ 'start_date' => 'datetime', 'deadline' => 'datetime', ];
 
+    public function getProgressAttribute() {
+        if($this->tasks->isEmpty()) {
+            return 0;
+        }
+
+        $completed = $this->tasks->where('is_completed', true)->count();
+        $total = $this->tasks->count();
+
+        return round(($completed / $total) * 100);
+    }
+
     // Проект принадлежит одному пользователю
     public function user()
     {
