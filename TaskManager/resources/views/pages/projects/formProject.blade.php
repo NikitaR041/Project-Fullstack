@@ -1,93 +1,95 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="project-container" style="padding: 20px; max-width: 800px; margin: auto;">
+<div class="container mt-5">
+    <div class="row">
+        {{-- Левая часть: форма --}}
+        <div class="col-md-6 mb-4">
+            <h2>{{ isset($project) ? 'Редактирование проекта' : 'Создание проекта' }}</h2>
 
-    <h2>{{ isset($project) ? 'Редактирование проекта' : 'Создание проекта' }}</h2>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <form action="{{ isset($project) ? route('projects.update', $project->id) : route('projects.store') }}" method="POST">
+                @csrf
+                @if(isset($project))
+                    @method('PUT')
+                @endif
 
-    {{-- Форма создания/редактирования проекта --}}
-    <form
-        action="{{ isset($project) ? route('projects.update', $project->id) : route('projects.store') }}" method="POST" style="margin-bottom: 30px;">
-        @csrf
-        @if(isset($project))
-            @method('PUT')
-        @endif
+                <div class="form-group mb-3">
+                    <label for="title">Название проекта</label>
+                    <input type="text" name="title" class="form-control" value="{{ old('title', $project->title ?? '') }}" required>
+                </div>
 
-        <div style="form-group mb-3">
-            <label for="title">Название проекта</label>
-            <input type="text" name="title" class="form-control" value="{{ old('title', $project->title ?? '') }}" required style="margin-bottom: 30px">
-        </div>
+                <div class="form-group mb-3">
+                    <label for="category">Категория</label>
+                    <input type="text" name="category" class="form-control" value="{{ old('category', $project->category->name ?? '') }}" required>
+                </div>
 
-        <div class="form-group mb-3">
-            <label for="category">Категория</label>
-            <input type="text" name="category" class="form-control"
-                value="{{ old('category', $project->category->name ?? '') }}" required>
-        </div>
+                <div class="form-group mb-3">
+                    <label for="description">Описание</label>
+                    <input type="text" name="description" class="form-control" value="{{ old('description', $project->description ?? '') }}" required>
+                </div>
 
-        <div style="form-group mb-3">
-            <label for="title">Описание</label>
-            <input type="text" name="description" class="form-control" value="{{ old('description', $project->description ?? '') }}" required style="margin-bottom: 30px">
-        </div>
+                <div class="form-group mb-3">
+                    <label for="deadline">Дедлайн</label>
+                    <input type="date" name="deadline" class="form-control"
+                        value="{{ old('deadline', isset($project->deadline) ? $project->deadline->format('Y-m-d') : '') }}">
+                </div>
 
-        <div class="form-group mb-3">
-            <label for="deadline">Дедлайн</label>
-            <input type="date" name="deadline" class="form-control"
-                   value="{{ old('deadline', isset($project->deadline) ? $project->deadline->format('Y-m-d') : '') }}">
-        </div>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        {{ isset($project) ? 'Сохранить изменения' : 'Создать проект' }}
+                    </button>
 
-        <div style="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                {{ isset($project) ? 'Сохранить изменения' : 'Создать проект' }}
-            </button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
 
-            <a href="{{ route('dashboard') }}" class="btn btn-secondary"> Выйти на рабочий стол</a>
+                    @if(isset($project))
+                        <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}" class="btn btn-secondary">
+                            Добавить задачу
+                        </a>
+                    @endif
+                </div>
+            </form>
 
             @if(isset($project))
-                {{-- Показываем кнопку добавления объекта-задачи только если объект-проект уже существует --}}
-                <a class="btn btn-secondary"  href="{{ route('tasks.create', ['project_id' => $project->id]) }}">
-                    Добавить задачу
-                </a>
-
+                <form action="{{ route('projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Удалить проект?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Удалить проект</button>
+                </form>
             @endif
         </div>
-    </form>
-    {{-- Показываем кнопку удаления только если задача уже существует --}}
-    @if(isset($project))
-        <form action="{{ route('projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Удалить проект?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Удалить</button>
-        </form>
-    @endif
 
-    {{-- Список задач, если проект уже существует --}}
-    @if(isset($project) && $project->tasks->count())
-        <hr>
-        <h3>Задачи проекта</h3>
+        {{-- Правая часть: карточки задач --}}
+        <div class="col-md-6">
+            <h3>Задачи проекта</h3>
+            @if(isset($project) && $project->tasks->count())
+            <div class="cards">
+                @foreach($project->tasks as $task)
+                    <div class="card">
+                        <a href="{{ route('tasks.edit', $task->id) }}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ $task->title }}</h5>
+                            <p>{{ Str::limit($task->description, 80) }}</p>
+                            @if($task->deadline)
+                                <small>⏳ до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
+                            @endif
+                        </a>
+                    </div>
+                @endforeach
+            </div>
 
-        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px;">
-            @foreach($project->tasks as $task)
-                <div style="padding: 10px; margin-bottom: 8px; background: #f5f5f5; border-radius: 5px;">
-                    <a href="{{ route('tasks.edit', $task->id) }}" style="text-decoration: none; color: black;">
-                        {{ $task->title }}
-                    </a>
-                </div>
-            @endforeach
+            @else
+                <p>Задачи ещё не добавлены.</p>
+            @endif
         </div>
-    @elseif(isset($project))
-        <p>Задачи ещё не добавлены.</p>
-    @endif
-
-
+    </div>
 </div>
 @endsection

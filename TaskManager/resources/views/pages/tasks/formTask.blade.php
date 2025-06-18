@@ -14,17 +14,15 @@
         </div>
     @endif
 
-    {{-- Формируем правильный маршрут и метод --}}
+    {{-- Основная форма создания/редактирования задачи --}}
     <form
-        action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store', $selectedProject->id ?? null) }}" method="POST">
+        action="{{ isset($task) ? route('tasks.update', $task->id) : route('tasks.store', $selectedProject->id ?? null) }}"method="POST">
         @csrf
-
         @if(isset($task))
             @method('PUT')
         @endif
 
         <input type="hidden" name="project_id" value="{{ request('project_id') ?? $selectedProjectId ?? null }}">
-
 
         <div class="form-group mb-3">
             <label for="title">Название задачи</label>
@@ -38,8 +36,7 @@
 
         <div class="form-group mb-3">
             <label for="category">Категория</label>
-            <input type="text" name="category" class="form-control"
-                value="{{ old('category', $task->category->name ?? '') }}" required>
+            <input type="text" name="category" class="form-control" value="{{ old('category', $task->category->name ?? '') }}" required>
         </div>
 
         <div class="form-group mb-3">
@@ -48,24 +45,23 @@
                    value="{{ old('deadline', isset($task->deadline) ? $task->deadline->format('Y-m-d') : '') }}">
         </div>
 
-        <div class="d-flex mb-3">
+        {{-- Кнопки: Сохранить / Назад (в одной строке) --}}
+        <div class="d-flex gap-2 mb-3">
             <button type="submit" class="btn btn-primary">
                 {{ isset($task) ? 'Сохранить изменения' : 'Создать задачу' }}
             </button>
-        </div>
-    </form>
-
-            {{-- Показываем кнопку удаления только если задача уже существует --}}
-    @if(isset($task))
-        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="mb-3" onsubmit="return confirm('Удалить задачу?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">Удалить</button>
-        </form>
-    @endif
 
             <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
         </div>
     </form>
+
+    {{-- Форма удаления задачи (отдельно, только если задача уже существует) --}}
+    @if(isset($task))
+        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="mt-2" onsubmit="return confirm('Удалить задачу?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger">Удалить задачу</button>
+        </form>
+    @endif
 </div>
 @endsection
