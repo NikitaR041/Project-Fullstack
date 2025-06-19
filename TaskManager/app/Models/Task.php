@@ -10,7 +10,7 @@ class Task extends Model
     use HasFactory;
 
     //Поля
-    protected $fillable = ['title', 'description', 'image', 'user_id', 'category_id', 'project_id', 'start_date', 'deadline', 'is_completed'];
+    protected $fillable = ['title', 'description', 'user_id', 'category_id', 'project_id', 'start_date', 'deadline', 'is_completed'];
 
     //Дополнительно для форматирование даты
     protected $casts = [ 'start_date' => 'datetime', 'deadline' => 'datetime', ];
@@ -32,4 +32,10 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
+    // Одна задача может иметь множество картинок (один ко многим)
+    public function images()
+    {
+        return $this->hasMany(TaskImage::class);
+    }
+
 }
