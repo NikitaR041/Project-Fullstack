@@ -5,7 +5,52 @@
 <div class="container mt-5">
     <div class="form-container">
         {{-- Левая панель: форма --}}
-        <h2>{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
+        {{-- <div class="heading-head">
+            <h2>{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
+            @if(isset($task))
+                <div class="d-flex">
+                    <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                            {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
+                        </button>
+                    </form>
+                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="task-btn-base task-btn--delete">
+                            <img src="{{ asset('image/trash.png') }}" alt="Delete"> Удалить </button>
+                    </form>
+                </div>
+        @endif
+        <div> --}}
+        <div class="task-header">
+            <h2 class="mb-0">{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
+
+            @if(isset($task))
+                <div class="d-flex gap-2">
+                    {{-- Кнопка: отметить выполненной --}}
+                    <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                            {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
+                        </button>
+                    </form>
+
+                    {{-- Кнопка: удалить --}}
+                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="task-btn-base task-btn--delete">
+                            <img src="{{ asset('image/trash.png') }}" alt="Delete">
+                            Удалить
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+
+
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -46,6 +91,18 @@
                         <input type="date" name="deadline" class="form-control"
                                value="{{ old('deadline', isset($task->deadline) ? $task->deadline->format('Y-m-d') : '') }}">
                     </div>
+                    <div class="form-group d-flex gap-2 flex-wrap mt-3">
+                        <button type="submit" class="task-btn-base task-btn--default">
+                            <img src="{{ asset('image/' . (isset($task) ? 'magic-wand.png' : 'disk.png')) }}" alt="Save">
+                            {{ isset($task) ? 'Сохранить' : 'Создать' }}
+                        </button>
+                        <a href="{{ route('dashboard') }}" class="task-btn-base task-btn--default">
+                            <img src="{{ asset('image/arrow-alt-square-left.png') }}" alt="Back">
+                            Назад
+                        </a>
+                    </div>
+
+
                 </div>
                 {{-- Правая панель --}}
                 <div class="task-images">
@@ -70,36 +127,7 @@
                     <div id="image-preview-container" class="image-preview-container"></div>
                 </div> --}}
             </div>
-
-            <div class="form-group d-flex gap-2 flex-wrap mt-3">
-                <button type="submit" class="task-btn-base task-btn--default">
-                    <img src="{{ asset('image/' . (isset($task) ? 'magic-wand.png' : 'disk.png')) }}" alt="Save">
-                    {{ isset($task) ? 'Сохранить' : 'Создать' }}
-                </button>
-                <a href="{{ route('dashboard') }}" class="task-btn-base task-btn--default">
-                    <img src="{{ asset('image/arrow-alt-square-left.png') }}" alt="Back">
-                    Назад
-                </a>
-            </div>
         </form>
-
-        @if(isset($task))
-            <div class="">
-                <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
-                        {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
-                    </button>
-                </form>
-                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="task-btn-base task-btn--delete">
-                        <img src="{{ asset('image/trash.png') }}" alt="Delete"> Удалить </button>
-                </form>
-            </div>
-        @endif
-
     </div>
 </div>
 
