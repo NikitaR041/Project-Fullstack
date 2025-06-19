@@ -45,14 +45,14 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap mb-3">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="task-btn-base task-btn--default">
                         {{ isset($project) ? 'Сохранить изменения' : 'Создать проект' }}
                     </button>
 
-                    <a href="{{ route('dashboard') }}" class="btn btn-secondary">Назад</a>
+                    <a href="{{ route('dashboard') }}" class="task-btn-base task-btn--default">Назад</a>
 
                     @if(isset($project))
-                        <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}" class="btn btn-secondary">
+                        <a href="{{ route('tasks.create', ['project_id' => $project->id]) }}" class="task-btn-base task-btn--default">
                             Добавить задачу
                         </a>
                     @endif
@@ -63,7 +63,7 @@
                 <form action="{{ route('projects.destroy', $project->id) }}" method="POST" onsubmit="return confirm('Удалить проект?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Удалить проект</button>
+                    <button type="submit" class="task-btn-base task-btn--delete">Удалить проект</button>
                 </form>
             @endif
         </div>
@@ -90,7 +90,8 @@
                             <div class="flex-grow-1">
                                 <a href="{{ route('tasks.edit', $task->id) }}" style="text-decoration: none; color: inherit;">
                                     <h5>{{ $task->title }}</h5>
-                                    <p>{{ Str::limit($task->description, 80) }}</p>
+                                    <small>{{ Str::limit($task->description, 80) }}</small><br>
+                                    <small>Категория: {{ $task->category->name ?? 'Без категории' }}</small><br>
                                     @if($task->deadline)
                                         <small>⏳ до {{ \Carbon\Carbon::parse($task->deadline)->format('d.m.Y') }}</small>
                                     @endif
