@@ -8,29 +8,29 @@
             <h2 class="mb-0">{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
 
             @if(isset($task))
-                <div class="d-flex gap-2">
-                    {{-- Кнопка: отметить выполненной --}}
-                    <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
-                            {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
-                        </button>
-                    </form>
+                <div class="d-flex flex-column">
+                    <div class="d-flex gap-2">
+                        {{-- Кнопка: отметить выполненной --}}
+                        <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
+                                {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
+                            </button>
+                        </form>
 
-                    {{-- Кнопка: удалить --}}
-                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="task-btn-base task-btn--delete">
-                            <img src="{{ asset('image/trash.png') }}" alt="Delete">
-                            Удалить
-                        </button>
-                    </form>
+                        {{-- Кнопка: удалить --}}
+                        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="task-btn-base task-btn--delete">
+                                <img src="{{ asset('image/trash.png') }}" alt="Delete">
+                                Удалить
+                            </button>
+                        </form>
+                    </div>
                 </div>
             @endif
         </div>
-
-
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -103,6 +103,7 @@
                             @foreach ($task->images as $image)
                                 <div class="image-preview-card">
                                     <img src="{{ asset('storage/' . $image->image_path) }}" alt="Изображение задачи">
+                                    <p>Изображение {{ $loop->iteration }}</p>
                                 </div>
                             @endforeach
                         </div>
@@ -112,6 +113,24 @@
                 </div>
             </div>
         </form>
+        <div class="task-delete-image">
+            @if($task && is_iterable($task->images) && $task->images->isNotEmpty())
+                <form id="deleteImageForm" method="POST" onsubmit="return confirm('Удалить выбранное изображение?')">
+                    @csrf
+                    @method('DELETE')
+                    <div class="form-group">
+                        <label for="image_id">Выберите изображение для удаления</label>
+                        <select name="image_id" id="image_id" class="custom-select" required>
+                            <option value="" disabled selected>Выберите изображение</option>
+                            @foreach($task->images as $image)
+                                <option value="{{ $image->id }}">Изображение {{ $loop->iteration }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="task-btn-base task-btn--delete mt-3">Удалить выбранное изображение</button>
+                </form>
+            </div>
+        @endif
     </div>
 </div>
 
@@ -146,6 +165,33 @@
             };
         });
     }
+</script>
+
+<script>
+    document.getElementById('deleteImageForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const imageId = document.getElementById('image_id').value;
+        if (!imageId) return;
+
+        const form = this;
+        const action = "{{ route('tasks.deleteImage', ['task' => $task->id, 'image' => 'IMAGE_ID']) }}"
+            .replace('IMAGE_ID', imageId);
+
+        fetch(action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'X-HTTP-Method-Override': 'DELETE'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.reload(); // Перезагрузить страницу после удаления
+            } else {
+                alert('Ошибка при удалении изображения');
+            }
+        });
+    });
 </script>
 
 @endsection

@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update'); // сохранение редактирования
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy'); // удаление задачи
     Route::post('/tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete'])->name('tasks.toggle-complete'); //Переключение статуса выполнения задачи
+    Route::delete('/tasks/{task}/images/{image}', [TaskController::class, 'deleteImage'])->name('tasks.deleteImage'); //Удаление изображения
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index'); // список проектов
     Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create'); // форма создания

@@ -75,23 +75,6 @@
     justify-content: space-between;
 }
 
-/* Связано с картинками */
-/* .image-upload-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #dfffdc;
-    border: 1px solid #83cc78;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.image-upload-btn:hover {
-    background-color: #a4f0a1;
-} */
-
 .image-preview-container {
     margin-top: 10px;
     display: flex;
@@ -106,102 +89,22 @@
     object-fit: cover;
 }
 
-/*  */
-/* .image-preview {
+.custom-select {
     width: 100%;
-    max-height: 200px;
-    margin-top: 10px;
-    object-fit: contain;
-    border-radius: 8px;
-}
-
-.image-preview {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 10px;
-    object-fit: contain;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-}
-
-.image-label {
-    display: inline-block;
     padding: 10px 15px;
-    background-color: #338d23;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.image-label:hover {
-    background-color: #2a7321;
-}
-
-#image {
-    display: none;
-} */
-
-/* .task-button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.task-button-group form {
-    display: inline-block;
-} */
-
-
-/* Это относиться для множество фото */
-/* .image-upload-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #e0f0ff;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid #68aee0;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.image-upload-btn img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-}
-
-.image-upload-btn:hover {
-    background-color: #b8e1ff;
-    transform: scale(1.03);
-}
-
-.image-preview-container {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.image-preview-card {
-    position: relative;
-    background-color: #ffffff;
-    padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid #e81414;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #fff6f6;
+    font-size: 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23666' d='M70 95L20 45h100z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
 }
 
-.image-preview-card img {
-    max-width: 150px;
-    max-height: 150px;
-    border-radius: 6px;
-    object-fit: contain;
-} */
+.task-delete-image {
+    display: flex;
+    margin-left: auto;
+    width: 50%;
+}

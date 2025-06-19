@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Project;
 use App\Models\Category;
+use App\Models\TaskImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -171,6 +172,10 @@ class TaskController extends Controller
             $category->delete();
         }
 
+        foreach ($task->images as $image) {
+            Storage::disk('public')->delete($image->image_path);
+        }
+
         return redirect()->route('dashboard')->with('success', 'Задача удалена.');
     }
 
@@ -180,5 +185,19 @@ class TaskController extends Controller
         $task->update(['is_completed' => !$task->is_completed]);
 
         return back()->with('success', 'Статус задачи обновлен.');
+    }
+
+    public function deleteImage(Task $task, TaskImage $image)
+    {
+        $this->authorize('update', $task);
+
+        if (!$task->images()->where('id', $image->id)->exists()) {
+            abort(404, 'Изображение не найдено или не принадлежит задаче');
+        }
+
+        Storage::disk('public')->delete($image->image_path);
+        $image->delete();
+
+        return back()->with('success', 'Изображение удалено');
     }
 }
