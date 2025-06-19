@@ -1,10 +1,19 @@
-/* Голова в файле .cover */
 header {
-  background-color: rgb(255, 255, 255);
-  height: 20px;
-  /* padding: 1px;
-  margin: 10px; */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+main {
+    margin-top: 70px;
+    position: relative;
+    z-index: 1;
+}
+
 /* Основа main для .cover */
 .cover {
     display: flex;
