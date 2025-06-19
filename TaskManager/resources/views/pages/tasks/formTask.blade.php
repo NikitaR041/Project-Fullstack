@@ -167,6 +167,7 @@
     }
 </script>
 
+@if(isset($task))
 <script>
     document.getElementById('deleteImageForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -193,5 +194,6 @@
         });
     });
 </script>
+@endif
 
 @endsection
