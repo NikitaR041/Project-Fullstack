@@ -4,26 +4,6 @@
 
 <div class="container mt-5">
     <div class="form-container">
-        {{-- Левая панель: форма --}}
-        {{-- <div class="heading-head">
-            <h2>{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
-            @if(isset($task))
-                <div class="d-flex">
-                    <form action="{{ route('tasks.toggle-complete', $task->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="task-btn-base task-btn--default {{ $task->is_completed ? 'btn-success' : 'btn-outline-secondary' }}">
-                            {{ $task->is_completed ? '✓ Выполнена' : 'Отметить выполненной' }}
-                        </button>
-                    </form>
-                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Удалить задачу?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="task-btn-base task-btn--delete">
-                            <img src="{{ asset('image/trash.png') }}" alt="Delete"> Удалить </button>
-                    </form>
-                </div>
-        @endif
-        <div> --}}
         <div class="task-header">
             <h2 class="mb-0">{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
 
@@ -96,7 +76,11 @@
                             <img src="{{ asset('image/' . (isset($task) ? 'magic-wand.png' : 'disk.png')) }}" alt="Save">
                             {{ isset($task) ? 'Сохранить' : 'Создать' }}
                         </button>
-                        <a href="{{ route('dashboard') }}" class="task-btn-base task-btn--default">
+                        @if(isset($task) && $task->project_id)
+                            <a href="{{ route('projects.show', $task->project_id) }}" class="task-btn-base task-btn--default">
+                        @else
+                            <a href="{{ route('dashboard') }}" class="task-btn-base task-btn--default">
+                        @endif
                             <img src="{{ asset('image/arrow-alt-square-left.png') }}" alt="Back">
                             Назад
                         </a>
@@ -115,17 +99,6 @@
                         <img id="imagePreview" class="image-preview" src="#" alt="Preview" style="display: none;">
                     @endif
                 </div>
-                {{-- Это вроде возможность добавить несколько фото --}}
-                {{-- <div class="task-images">
-                    <label for="image-upload" class="image-upload-btn">
-                        <img src="{{ asset('image/add-image.png') }}" alt="Добавить изображение">
-                        Загрузить фото
-                    </label>
-                    <input type="file" name="images[]" id="image-upload" accept="image/*"
-                        multiple onchange="handleImageUpload(event)" style="display: none;">
-
-                    <div id="image-preview-container" class="image-preview-container"></div>
-                </div> --}}
             </div>
         </form>
     </div>

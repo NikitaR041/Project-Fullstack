@@ -3,16 +3,6 @@
 @section('content')
 <div class="dashboardheader">
     <div class="header-left">
-        <div class="user-info">
-            <img src="{{ asset('image/user.png') }}" alt="Профиль" class="icon">
-            <span>{{ Auth::user()->name }}</span>
-        </div>
-        <a href="{{ route('logout') }}" class= "header-button">
-            <img src="{{ asset('image/leave.png') }}" alt="Выход" class="icon">
-        </a>
-    </div>
-
-    <div class="header-right">
         <a href="{{ route('tasks.create') }}" class="header-button">
             <img src="{{ asset('image/task-checklist.png') }}" alt="Создать задачу">
             <span>Создать задачу</span>
@@ -24,6 +14,16 @@
         <a href="#" class="header-button">
             <img src="{{ asset('image/calendar.png') }}" alt="Расписание">
             <span>Расписание</span>
+        </a>
+    </div>
+
+    <div class="header-right">
+        <div class="user-info">
+            <img src="{{ asset('image/user.png') }}" alt="Профиль" class="icon">
+            <span>{{ Auth::user()->name }}</span>
+        </div>
+        <a href="{{ route('logout') }}" class= "header-button">
+            <img src="{{ asset('image/leave.png') }}" alt="Выход" class="icon">
         </a>
     </div>
 </div>
