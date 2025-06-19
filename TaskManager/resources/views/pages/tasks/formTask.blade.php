@@ -93,16 +93,11 @@
                 </div>
                 {{-- Правая панель --}}
                 <div class="task-images">
-                    {{-- <label for="image-upload" class="task-btn-base task-btn--default">
-                        <img src="{{ asset('image/add-image.png') }}" alt="Добавить изображение">
-                        Загрузить фото
-                    </label> --}}
                     <input type="file" name="images[]" id="image-upload" accept="image/*"
                         multiple onchange="handleImageUpload(event)" style="display: none;">
 
                     <div id="image-preview-container" class="image-preview-container"></div>
 
-                    {{-- @if(isset($task) && $task->images && $task->images->isNotEmpty()) --}}
                     @if($task && is_iterable($task->images) && $task->images->isNotEmpty())
                         <div class="image-preview-container">
                             @foreach ($task->images as $image)
@@ -120,24 +115,6 @@
     </div>
 </div>
 
-{{-- Если будем вставлять несколько картинок, то меняем этот скрипт
-Также меняем TaskConrtoller - ограничение на картинок (примерно 10 картинок), размер картинок (наверное 1000на1000 пикселей)
-А также добавить новую модель с миграцией(таблицей) --}}
-
-{{-- <script>
-    function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('imagePreview');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-</script> --}}
 <script>
     function handleImageUpload(event) {
         const files = event.target.files;
