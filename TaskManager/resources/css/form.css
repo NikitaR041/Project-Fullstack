@@ -76,7 +76,38 @@
 }
 
 /* Связано с картинками */
-.image-preview {
+/* .image-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #dfffdc;
+    border: 1px solid #83cc78;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.image-upload-btn:hover {
+    background-color: #a4f0a1;
+} */
+
+.image-preview-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.image-preview-card img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/*  */
+/* .image-preview {
     width: 100%;
     max-height: 200px;
     margin-top: 10px;
@@ -109,7 +140,7 @@
 
 #image {
     display: none;
-}
+} */
 
 /* .task-button-group {
     display: flex;

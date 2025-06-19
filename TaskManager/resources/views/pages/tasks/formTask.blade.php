@@ -84,19 +84,35 @@
                             <img src="{{ asset('image/arrow-alt-square-left.png') }}" alt="Back">
                             Назад
                         </a>
+                        <label for="image-upload" class="task-btn-base task-btn--default">
+                            {{-- <img src="{{ asset('image/add-image.png') }}" alt="Добавить изображение"> --}}
+                            Загрузить фото
+                        </label>
+
                     </div>
-
-
                 </div>
                 {{-- Правая панель --}}
                 <div class="task-images">
-                    <label for="image" class="image-label">📁 Загрузить изображение</label>
-                    <input type="file" name="image" id="image" accept="image/*" onchange="previewImage(event)">
+                    {{-- <label for="image-upload" class="task-btn-base task-btn--default">
+                        <img src="{{ asset('image/add-image.png') }}" alt="Добавить изображение">
+                        Загрузить фото
+                    </label> --}}
+                    <input type="file" name="images[]" id="image-upload" accept="image/*"
+                        multiple onchange="handleImageUpload(event)" style="display: none;">
 
-                    @if(isset($task) && $task->image)
-                        <img id="imagePreview" class="image-preview" src="{{ asset('storage/' . $task->image) }}" alt="Preview">
+                    <div id="image-preview-container" class="image-preview-container"></div>
+
+                    {{-- @if(isset($task) && $task->images && $task->images->isNotEmpty()) --}}
+                    @if($task && is_iterable($task->images) && $task->images->isNotEmpty())
+                        <div class="image-preview-container">
+                            @foreach ($task->images as $image)
+                                <div class="image-preview-card">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Изображение задачи">
+                                </div>
+                            @endforeach
+                        </div>
                     @else
-                        <img id="imagePreview" class="image-preview" src="#" alt="Preview" style="display: none;">
+                        <p class="text-muted">Пока нет изображений</p>
                     @endif
                 </div>
             </div>
@@ -108,7 +124,7 @@
 Также меняем TaskConrtoller - ограничение на картинок (примерно 10 картинок), размер картинок (наверное 1000на1000 пикселей)
 А также добавить новую модель с миграцией(таблицей) --}}
 
-<script>
+{{-- <script>
     function previewImage(event) {
         const input = event.target;
         const preview = document.getElementById('imagePreview');
@@ -121,5 +137,38 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
+</script> --}}
+<script>
+    function handleImageUpload(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById('image-preview-container');
+        previewContainer.innerHTML = "";
+
+        if (files.length > 10) {
+            alert("Нельзя загружать более 10 изображений.");
+            event.target.value = '';
+            return;
+        }
+
+        Array.from(files).forEach(file => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+
+            img.onload = () => {
+                if (img.width > 1000 || img.height > 1000) {
+                    alert(`Изображение "${file.name}" превышает допустимые размеры (1000x1000).`);
+                    event.target.value = '';
+                    previewContainer.innerHTML = "";
+                    return;
+                }
+
+                const wrapper = document.createElement("div");
+                wrapper.className = "image-preview-card";
+                wrapper.appendChild(img);
+                previewContainer.appendChild(wrapper);
+            };
+        });
+    }
 </script>
+
 @endsection

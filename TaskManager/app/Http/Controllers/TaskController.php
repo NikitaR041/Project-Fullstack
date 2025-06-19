@@ -52,7 +52,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'images' => 'nullable|array|max:10', // массив файлов, максимум 10
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',  // каждый файл в массиве
             'category' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'nullable|date',
@@ -68,15 +69,16 @@ class TaskController extends Controller
         unset($validated['category']);
         $validated['project_id'] = $request->input('project_id') ?? null;
 
-        if($request->hasFile('image'))
-        {
-            $validated['image'] = $request->file('image')
-                ->store('image', 'public');
-        }
-
         $validated['user_id'] = Auth::id();
 
-        Task::create($validated);
+        $task = Task::create($validated);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('task_images', 'public');
+                $task->images()->create(['image_path' => $path]);
+            }
+        }
 
         // Если задача относится к проекту — редирект на редактирование проекта
         if ($validated['project_id'] ?? false) {
@@ -92,7 +94,7 @@ class TaskController extends Controller
     {
         $this->authorize('view', $task);
 
-        $task->load(['user', 'category', 'project']);
+        $task->load(['user', 'category', 'project', 'images']);
         $categories = Category::all();
         // return view('pages.tasks.show', compact('task'));
         return view('pages.tasks.formTask', compact('task', 'categories'));
@@ -106,7 +108,8 @@ class TaskController extends Controller
         $projects = Project::where('user_id', Auth::id())->get();
         $categories = Category::all();
 
-        // return view('pages.tasks.edit', compact('task', 'projects', 'categories'));
+        $task->load('images'); //Загрузим связные изображения
+
         return view('pages.tasks.formTask', compact('task', 'projects', 'categories'));
     }
 
@@ -118,7 +121,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            // 'images' => 'nullable|array|max:10', // массив файлов, максимум 10
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',  // каждый файл в массиве
             'category' => 'required|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
             'start_date' => 'sometimes|date',
@@ -132,22 +136,23 @@ class TaskController extends Controller
             }
         }
 
-        if ($request->hasFile('image')) {
-            if ($task->image && Storage::disk('public')->exists($task->image)) {
-                Storage::disk('public')->delete($task->image);
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $path = $file->store('task_images', 'public');
+                $task->images()->create(['image_path' => $path]);
             }
-
-            $validated['image'] = $request->file('image')
-                ->store('image', 'public');
         }
 
         // Найти или создать категорию
         $category = Category::firstOrCreate([
             'name' => $validated['category'], 'user_id' => Auth::id()
         ]);
-        $validated['category_id'] = $category->id;
+        // $validated['category_id'] = $category->id;
 
         unset($validated['category']); // Убираем, чтобы не было ошибки
+        unset($validated['images']);
+
+        $validated['category_id'] = $category->id;
 
         $task->update($validated);
         return redirect()->route('dashboard')->with('success', 'Задача обновлена!');
