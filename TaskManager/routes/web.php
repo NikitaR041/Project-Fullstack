@@ -25,7 +25,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // CRUD - объектов-задач
-    Route::resource('tasks', TaskController::class);
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index'); // список задач
     Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); // форма создания
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store'); // отправка формы
