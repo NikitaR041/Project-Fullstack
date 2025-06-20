@@ -8,9 +8,8 @@
             <h2 class="mb-0">{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
             <div class="header-body d-flex flex-wrap align-items-center gap-2">
                 @if($task && is_iterable($task->images) && $task->images->isNotEmpty())
-                    <form id="deleteImageForm" method="POST" onsubmit="return confirm('Удалить выбранное изображение?')">
+                    <form id="deleteImageForm" method="POST" onsubmit="return confirm('Удалить выбранное изображение?')" data-task-id="{{ $task->id }}">
                         @csrf
-                        @method('DELETE')
                         <div class="d-flex align-items-center gap-2">
                             <select name="image_id" id="image_id" class="form-control form-control-sm" required>
                                 <option value="" disabled selected>Выбрать изображение</option>
@@ -141,66 +140,6 @@
     </div>
 </div>
 
-<script>
-    function handleImageUpload(event) {
-        const files = event.target.files;
-        const previewContainer = document.getElementById('image-preview-container');
-        previewContainer.innerHTML = "";
-
-        if (files.length > 10) {
-            alert("Нельзя загружать более 10 изображений.");
-            event.target.value = '';
-            return;
-        }
-
-        Array.from(files).forEach(file => {
-            const img = new Image();
-            img.src = URL.createObjectURL(file);
-
-            img.onload = () => {
-                if (img.width > 1000 || img.height > 1000) {
-                    alert(`Изображение "${file.name}" превышает допустимые размеры (1000x1000).`);
-                    event.target.value = '';
-                    previewContainer.innerHTML = "";
-                    return;
-                }
-
-                const wrapper = document.createElement("div");
-                wrapper.className = "image-preview-card";
-                wrapper.appendChild(img);
-                previewContainer.appendChild(wrapper);
-            };
-        });
-    }
-</script>
-
-@if(isset($task))
-<script>
-    document.getElementById('deleteImageForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const imageId = document.getElementById('image_id').value;
-        if (!imageId) return;
-
-        const form = this;
-        const action = "{{ route('tasks.deleteImage', ['task' => $task->id, 'image' => 'IMAGE_ID']) }}"
-            .replace('IMAGE_ID', imageId);
-
-        fetch(action, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'X-HTTP-Method-Override': 'DELETE'
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.reload(); // Перезагрузить страницу после удаления
-            } else {
-                alert('Ошибка при удалении изображения');
-            }
-        });
-    });
-</script>
-@endif
-
 @endsection
+
+@vite('resources/js/handleTaskForm.js')
