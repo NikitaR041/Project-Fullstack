@@ -6,7 +6,7 @@
     <div class="form-container">
         <div class="task-header">
             <h2 class="mb-0">{{ isset($task) ? 'Редактировать задачу' : 'Создать задачу' }}</h2>
-            <div class="header-body">
+            <div class="header-body d-flex flex-wrap align-items-center gap-2">
                 @if($task && is_iterable($task->images) && $task->images->isNotEmpty())
                     <form id="deleteImageForm" method="POST" onsubmit="return confirm('Удалить выбранное изображение?')">
                         @csrf
