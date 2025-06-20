@@ -73,6 +73,10 @@ class TaskController extends Controller
 
         $task = Task::create($validated);
 
+        if ($request->hasFile('images') && count($request->file('images')) > 10) {
+            return back()->withErrors(['images' => 'Можно загрузить не более 10 изображений.'])->withInput();
+        }
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
                 $path = $file->store('task_images', 'public');
@@ -132,6 +136,10 @@ class TaskController extends Controller
             if ($project && $project->user_id !== Auth::id()) {
                 abort(403, 'Вы не можете привязывать задачи к чужим проектам');
             }
+        }
+
+        if ($request->hasFile('images') && count($request->file('images')) > 10) {
+            return back()->withErrors(['images' => 'Можно загрузить не более 10 изображений.'])->withInput();
         }
 
         if ($request->hasFile('images')) {

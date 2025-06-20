@@ -23,20 +23,7 @@
     {{-- Подвал --}}
     <footer class="site-footer">
             <div class="container">
-                {{-- Необязательно такое прописывать --}}
-                {{-- &copy; 2025 MyProject --}}
             </div>
     </footer>
-
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
-
-    {{-- @if(app()->environment('local'))
-        @vite(['resources/js/app.js']) <!-- Для разработки -->
-    @else
-        <script src="{{ asset('js/app.js') }}"></script> <!-- Для продакшена -->
-    @endif
-    @stack('scripts') --}}
-    {{-- <script src="{{ asset('js/app.js') }}"></script>
-    @stack('scripts') --}}
 </body>
 </html>
