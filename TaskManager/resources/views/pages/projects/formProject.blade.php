@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-5">
+<div class="project-container mt-5">
     <div class="row">
         {{-- Левая часть: форма --}}
         <div class="col-md-6 mb-4">
@@ -33,9 +33,9 @@
                     <input type="text" name="category" class="form-control" value="{{ old('category', $project->category->name ?? '') }}" required>
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group">
                     <label for="description">Описание</label>
-                    <input type="text" name="description" class="form-control" value="{{ old('description', $project->description ?? '') }}" required>
+                    <textarea name="description" class="form-control" rows="4">{{ old('description', $project->description ?? '') }}</textarea>
                 </div>
 
                 <div class="form-group mb-3">
