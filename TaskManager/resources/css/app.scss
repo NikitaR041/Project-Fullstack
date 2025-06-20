@@ -1,3 +1,8 @@
+@use 'cover.scss';
+@use 'dashboard.scss';
+@use 'form.scss';
+@use 'register.scss';
+
 // Цветовая палитра
 $colors: (
   "primary": #209d46,

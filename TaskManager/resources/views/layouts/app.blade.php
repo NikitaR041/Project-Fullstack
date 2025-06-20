@@ -8,10 +8,6 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources\css\app.scss'])
-    @vite(['resources\css\register.scss'])
-    @vite(['resources\css\dashboard.scss'])
-    @vite(['resources\css\form.scss'])
-    @vite(['resources\css\cover.scss'])
 
 </head>
 <body>
