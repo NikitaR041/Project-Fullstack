@@ -161,15 +161,21 @@ class TaskController extends Controller
         $this->authorize('delete', $task);
         // Проверка на то, что если все карточки-задачи удалены, то удаляется и соотвутствующая категория
         $category = $task->category; // Сохраняем категорию до удаления
-        $task->delete();
-
-        // Проверяем, остались ли другие задачи с этой категорией
-        if ($category && $category->user_id === Auth::id() && $category->tasks()->count() === 0) {
-            $category->delete();
-        }
 
         foreach ($task->images as $image) {
             Storage::disk('public')->delete($image->image_path);
+            $image->delete();
+        }
+
+        $task->delete();
+
+        // Проверяем, остались ли другие задачи с этой категорией
+        if ($category && $category->user_id === Auth::id()) {
+            $remainingTasksCount = Task::where('category_id', $category->id)->count();
+
+            if ($remainingTasksCount === 0) {
+                $category->delete();
+            }
         }
 
         return redirect()->route('dashboard')->with('success', 'Задача удалена.');
