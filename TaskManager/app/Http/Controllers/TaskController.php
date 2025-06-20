@@ -53,7 +53,6 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            // 'images' => 'nullable|array|max:10', // массив файлов, максимум 10
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',  // каждый файл в массиве
             'category' => 'required|string|max:255', //required - категория обязательно; В последствии может быть nullable - необязательно прописывать, но нужно редактировать польностью работу
             'project_id' => 'nullable|exists:projects,id',
@@ -97,7 +96,6 @@ class TaskController extends Controller
 
         $task->load(['user', 'category', 'project', 'images']);
         $categories = Category::all();
-        // return view('pages.tasks.show', compact('task'));
         return view('pages.tasks.formTask', compact('task', 'categories'));
     }
 
@@ -122,7 +120,6 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
-            // 'images' => 'nullable|array|max:10', // массив файлов, максимум 10
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',  // каждый файл в массиве
             'category' => 'required|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
@@ -148,7 +145,6 @@ class TaskController extends Controller
         $category = Category::firstOrCreate([
             'name' => $validated['category'], 'user_id' => Auth::id()
         ]);
-        // $validated['category_id'] = $category->id;
 
         unset($validated['category']); // Убираем, чтобы не было ошибки
         unset($validated['images']);
@@ -156,7 +152,7 @@ class TaskController extends Controller
         $validated['category_id'] = $category->id;
 
         $task->update($validated);
-        return redirect()->route('dashboard')->with('success', 'Задача обновлена!');
+        return redirect()->back()->with('success', 'Задача обновлена');
     }
 
     //Удаление задачи у пользователя

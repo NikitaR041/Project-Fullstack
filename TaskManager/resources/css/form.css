@@ -1,8 +1,22 @@
+.task-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
 .form-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.header-body{
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 10px;
+
 }
 
 .task-fields {
@@ -69,42 +83,43 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.task-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* Стили и расположение для картинок */
+.image-preview-container {
+    column-count: 3;
+    column-gap: 16px;
 }
 
-.image-preview-container {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.image-preview-card {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 16px;
+    break-inside: avoid; /* Чтобы не ломались колонки */
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .image-preview-card img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.custom-select {
     width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #e81414;
-    border-radius: 8px;
-    background-color: #fff6f6;
-    font-size: 16px;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23666' d='M70 95L20 45h100z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 6px;
+}
+.image-preview-card {
+    transition: transform 0.3s ease;
+}
+.image-preview-card:hover {
+    transform: scale(1.03);
 }
 
-.task-delete-image {
-    display: flex;
-    margin-left: auto;
-    width: 50%;
+/* Для выпадающего списка в редактировании карточки */
+.form-control-sm {
+    background-color: #ffffff;     /* Белый фон */
+    color: #333333;                /* Тёмный текст */
+    border: 1px solid #ced4da;     /* Светло-серая рамка */
+    border-radius: 4px;            /* Слегка скруглённые углы */
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    appearance: auto;             /* Для совместимости, если раньше скрывался стиль */
 }

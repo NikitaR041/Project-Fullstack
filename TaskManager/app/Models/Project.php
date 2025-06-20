@@ -10,8 +10,6 @@ class Project extends Model
     use HasFactory;
 
     //Поля
-    // protected $fillable = ['title', 'description', 'user_id', 'category_id'];
-    // Не нужно нам поле category_id
     protected $fillable = ['title', 'description', 'user_id', 'category_id', 'start_date', 'deadline'];
 
     //Дополнительно для форматирование даты
