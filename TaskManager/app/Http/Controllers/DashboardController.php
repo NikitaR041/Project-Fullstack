@@ -38,7 +38,9 @@ class DashboardController extends Controller
             ->get();
 
         // Фильтрация по текущему пользователю - безопасно так
-        $categories = Category::where('user_id', Auth::id())->get();
+        $categories = Category::where('user_id', Auth::id())
+            ->with(['projects', 'tasks'])
+            ->get();
 
         // Это работает только если у категории уже есть проекты или задачи. Но если категория создана и пока пуста — она не попадёт ни в один список
         $projectCategories = $categories->filter(fn($cat) => $cat->projects->count() > 0);
