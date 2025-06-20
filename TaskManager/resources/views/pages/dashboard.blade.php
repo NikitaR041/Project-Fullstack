@@ -12,10 +12,10 @@
                 <img src="{{ asset('image/master-plan.png') }}" alt="Создать проект">
                 <span>Создать проект</span>
             </a>
-            <a href="#" class="header-button">
+            {{-- <a href="#" class="header-button">
                 <img src="{{ asset('image/calendar.png') }}" alt="Расписание">
                 <span>Расписание</span>
-            </a>
+            </a> --}}
         </div>
 
         <div class="header-right">
