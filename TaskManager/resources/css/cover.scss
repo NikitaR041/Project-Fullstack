@@ -1,0 +1,119 @@
+// Цветовая палитра
+$colors: (
+  "primary": #4CAF50,
+  "primary-dark": #388e3c,
+  "secondary": #d7f7d0,
+  "secondary-hover": #c3f2b9,
+  "text-dark": #333,
+  "text-light": #666,
+  "white": #ffffff,
+  "bg-light": #e6ffe6,
+  "bg-lighter": #ccffcc
+);
+
+@function color($key) {
+  @return map-get($colors, $key);
+}
+
+@mixin button-style($bg, $color, $hover-bg: null, $border: none) {
+  background-color: $bg;
+  color: $color;
+  border: $border;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    background-color: if($hover-bg != null, $hover-bg, darken($bg, 5%));
+    transform: scale(1.03);
+  }
+}
+
+// Обложка (cover)
+.cover {
+  display: flex;
+  min-height: 100vh;
+  padding: 40px;
+  background: linear-gradient(to right, color("bg-light"), color("bg-lighter"));
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+
+  .left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      color: color("text-dark");
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: color("text-dark");
+      line-height: 1.6;
+    }
+  }
+
+  .right-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .auth-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .btn-primary {
+        @include button-style(color("primary"), color("white"), color("primary-dark"));
+      }
+
+      .btn-secondary {
+        @include button-style(color("secondary"), color("primary"), color("secondary-hover"), 1px solid color("primary"));
+      }
+    }
+  }
+
+  // Адаптив
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 20px;
+
+    .left-section,
+    .right-section {
+      width: 100%;
+      text-align: center;
+      align-items: center;
+
+      .logo {
+        margin: 0 auto 20px;
+      }
+    }
+
+    .auth-buttons {
+      flex-direction: row;
+      gap: 15px;
+
+      .btn-primary,
+      .btn-secondary {
+        flex: 1;
+      }
+    }
+  }
+}

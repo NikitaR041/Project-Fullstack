@@ -6,7 +6,7 @@
     <section class="cover">
         <div class="left-section">
             <img src="image/logo.png" alt="Логотип сайта" class="logo">
-            <h1>Task</h1>
+            <h1>Task manager</h1>
             <h2>
                 Твой задачник дел!<br>
                 Не забудь про важные мероприятия!

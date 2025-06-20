@@ -1,0 +1,192 @@
+$colors: (
+  "header-bg": #b1f699,
+  "header-border": #54ad2e,
+  "button-bg": #dfffdc,
+  "button-border": #83cc78,
+  "button-hover": #a4f0a1,
+  "card-bg": #93df89,
+  "card-border": #338d23,
+  "card-hover": #aef5a3,
+  "dropdown-bg": #ffffff,
+  "dropdown-border": #ccc,
+  "dropdown-hover": #f0f0f0,
+  "text-dark": #333,
+  "text-light": #999,
+  "shadow": rgba(0, 0, 0, 0.1),
+  "shadow-hover": rgba(0, 0, 0, 0.15),
+  "white": #ffffff
+);
+
+@function color($key) {
+  @return map-get($colors, $key);
+}
+
+@mixin flex($justify: flex-start, $align: center, $direction: row, $wrap: nowrap) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+}
+
+.dashboard-page {
+    /* ---------------- Верхняя панель ---------------- */
+    .dashboardheader {
+    background-color: color("header-bg");
+    border-bottom: 2px solid color("header-border");
+    padding: 10px 20px;
+    @include flex(space-between, center, row, wrap);
+    }
+
+    .header-left,
+    .header-right {
+    @include flex(center, center);
+    gap: 20px;
+    flex-wrap: wrap;
+    }
+
+    .user-info {
+    @include flex(center, center);
+    gap: 10px;
+    font-weight: bold;
+    }
+
+    /* ---------------- Кнопки ---------------- */
+    .header-button {
+    @include flex(center, center);
+    gap: 8px;
+    background-color: color("button-bg");
+    border: 1px solid color("button-border");
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: color("text-dark");
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        background-color: color("button-hover");
+        transform: scale(1.02);
+        box-shadow: 0 2px 8px color("shadow-hover");
+    }
+    }
+
+    .icon,
+    .header-button img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    cursor: pointer;
+    }
+
+    /* ---------------- Основной контейнер ---------------- */
+    .dashboardmain-columns {
+    @include flex(space-between, flex-start, row, wrap);
+    gap: 20px;
+    padding: 20px;
+    }
+
+    .column-block {
+    flex: 1;
+    min-width: 350px;
+    max-width: 50%;
+    }
+
+    /* ---------------- Заголовки секций ---------------- */
+    .section-header {
+    @include flex(space-between, center);
+    margin-bottom: 12px;
+    }
+
+    .filter-bar {
+    @include flex(center, center);
+    gap: 15px;
+    margin-bottom: 10px;
+    }
+
+    /* ---------------- Выпадающее меню ---------------- */
+    .dropdown {
+    position: relative;
+    }
+
+    .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: color("dropdown-bg");
+    border: 1px solid color("dropdown-border");
+    min-width: 150px;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 2px 6px color("shadow");
+
+    a {
+        display: block;
+        padding: 8px 12px;
+        text-decoration: none;
+        color: color("text-dark");
+
+        &:hover {
+        background-color: color("dropdown-hover");
+        }
+    }
+    }
+
+    .dropdown-empty {
+    display: block;
+    padding: 8px 12px;
+    color: color("text-light");
+    font-style: italic;
+    }
+
+    /* ---------------- Карточки ---------------- */
+    .cards {
+    @include flex(flex-start, flex-start, row, wrap);
+    gap: 15px;
+    }
+
+    .card {
+    min-width: 200px;
+    height: 200px;
+    background-color: color("card-bg");
+    border: 1px solid color("card-border");
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 6px color("shadow");
+    transition: 0.3s;
+
+    a {
+        color: color("text-dark");
+    }
+
+    &:hover {
+        background-color: color("card-hover");
+        transform: scale(1.02);
+    }
+
+    &.completed {
+        opacity: 0.6;
+        text-decoration: line-through;
+    }
+
+    .deadline {
+        display: block;
+        margin-top: 10px;
+        color: color("text-dark");
+    }
+
+    form {
+        margin-top: 10px;
+
+        button {
+        font-size: 1.1rem;
+        }
+    }
+    }
+
+    /* ---------------- Нет элементов ---------------- */
+    .no-items {
+    color: color("text-light");
+    font-style: italic;
+    padding: 10px;
+    }
+}
